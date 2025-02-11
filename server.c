@@ -3,33 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: arocca <arocca@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:36:42 by keyn              #+#    #+#             */
-/*   Updated: 2025/02/10 14:01:09 by keyn             ###   ########.fr       */
+/*   Updated: 2025/02/11 17:13:03 by arocca           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
+#include "minitalk.h"
 #include "ft_printf.h"
 
-int	get_mess_len(size_t	len, int signal)
+void	set_sigaction_handler(void (*handler)(int, siginfo_t *, void *))
 {
-	return (0);
+	struct	sigaction	act;
+
+	act.sa_sigaction = handler;
+	act.sa_flags = SA_SIGINFO;
+	sigemptyset(&act.sa_mask);
+	sigaction(SIGUSR1, &act, NULL);
+	sigaction(SIGUSR2, &act, NULL);
+	return ;
+}
+
+struct t_handler	init_values_storage(t_handler *handler, bool is_init)
+{
+	if (!is_init)
+	{
+		handler->message_len = 0;
+		handler->bit_counter = 0;
+		handler->message = NULL;
+		set_sigaction_handler(); // Fonction pour calculer la taille
+		return (handler);
+	}
 }
 
 int	main(void)
 {
-	size_t	len;
+	static t_handler	*status;
 
-	len = 0;
+	status = init_values_storage(status);
 	ft_printf("%i\n", getpid());
-	signal(SIGUSR1, signal_handler);
-    signal(SIGUSR2, signal_handler);
 	while (1)
-	{
 		pause();
-	}
 	return (0);
 }
