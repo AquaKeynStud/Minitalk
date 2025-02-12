@@ -6,7 +6,7 @@
 /*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:45:20 by keyn              #+#    #+#             */
-/*   Updated: 2025/02/10 13:55:16 by keyn             ###   ########.fr       */
+/*   Updated: 2025/02/12 15:33:33 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-void	send_char(int pid, char c, bool isSize)
+void	send_char(int pid, int c, bool isSize)
 {
 	int	i;
 
@@ -31,6 +31,7 @@ void	send_char(int pid, char c, bool isSize)
 			kill(pid, SIGUSR1);
 		usleep(100);
 	}
+	ft_printf("Lettre envoyée : %c\n", (char)c);
 }
 
 int	main(int argc, char **argv)
@@ -39,17 +40,16 @@ int	main(int argc, char **argv)
 	size_t	len;
 
 	if (argc != 3)
-	{
-		ft_printf("format : ./%s <pid> <message>\n", argv[0]);
-		return (1);
-	}
+		return (ft_printf("format : %s <pid> <message>\n", argv[0]));
 	ft_printf("Message à envoyer : %s\n", argv[2]); // Optionnel
-	ft_printf("Envoi au pid : %s", argv[1]); // Optionnel
+	ft_printf("Envoi au pid : %s\n", argv[1]); // Optionnel
 	pid = ft_atoi(argv[1]);
 	len = ft_strlen(argv[2]);
-	send_char(len, true);
-	while (*argv[2]++)
-		send_char(*argv[2], false);
-	send_char('\0', false);
+	send_char(pid, len, true);
+	while (*argv[2])
+	{
+		send_char(pid, *argv[2]++, false);
+	}
+	send_char(pid, '\0', false);
 	return (0);
 }
