@@ -6,7 +6,7 @@
 /*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:57:19 by arocca            #+#    #+#             */
-/*   Updated: 2025/02/12 15:27:39 by keyn             ###   ########.fr       */
+/*   Updated: 2025/02/12 18:01:47 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 typedef struct	s_handler
 {
-	int		bit_counter;
-	int		character;
-	int		fill_index;
-	size_t	message_len;
-	char	*message;
+	int				bit_counter;
+	unsigned char	character;
+	int				fill_index;
+	int				message_len;
+	char			*message;
 }				t_handler;
 
 void	init_values_storage(t_handler *handler, bool is_init);

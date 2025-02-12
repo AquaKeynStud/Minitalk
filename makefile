@@ -24,7 +24,7 @@ LIB	=	ft_printf/
 all : $(NAME)
 
 $(NAME) : makeprintf
-	@$(CC) -Ift_printf/inc -Lft_printf client.c -o client -lftprintf
+	@$(CC) -Ift_printf/inc -I. -Lft_printf client.c -o client -lftprintf
 	@$(CC) -Ift_printf/inc -I. -Lft_printf server.c -o server -lftprintf
 	@echo "\e[0;32mLe client et le server ont été créés avec succès ! 🧬\e[0m"
 

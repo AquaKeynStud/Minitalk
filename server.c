@@ -6,7 +6,7 @@
 /*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:36:42 by keyn              #+#    #+#             */
-/*   Updated: 2025/02/12 15:34:14 by keyn             ###   ########.fr       */
+/*   Updated: 2025/02/12 18:22:27 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,11 @@ void	len_handler(int signal, siginfo_t *info, void *context)
 	(void)info;
 	enable_queue(true);
 	if (signal == SIGUSR2)
-		g_status->message_len |= (1 << (31 - g_status->bit_counter));
+		g_status->message_len |= (1U << (31 - g_status->bit_counter));
 	g_status->bit_counter++;
 	if (g_status->bit_counter == 32)
 	{
 		g_status->bit_counter = 0;
-		ft_printf("Taille de la chaine : %i\n", g_status->message_len); // A enlever
 		g_status->message = (char *)malloc(g_status->message_len + 1);
 		if (!g_status->message)
 			return ;
@@ -62,17 +61,16 @@ void	char_handler(int signal, siginfo_t *info, void *context)
 	(void)info;
 	enable_queue(true);
 	if (signal == SIGUSR2)
-		g_status->message_len |= (1 << (7 - g_status->bit_counter));
+		g_status->character |= (1 << (7 - g_status->bit_counter));
 	g_status->bit_counter++;
 	if (g_status->bit_counter == 8)
 	{
-		ft_printf("Lettre trouvée : [%c]\n", (char)g_status->character);
 		g_status->fill_index++;
-		g_status->message[g_status->fill_index] = (char)(g_status->character);
+		g_status->message[g_status->fill_index] = g_status->character;
 		g_status->character = 0;
 		g_status->bit_counter = 0;
 		if (g_status->fill_index == g_status->message_len)
-			ft_printf("%s", g_status->message);
+			write(1, g_status->message, g_status->message_len);
 	}
 	enable_queue(false);
 }
