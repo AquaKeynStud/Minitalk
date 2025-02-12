@@ -6,7 +6,7 @@
 /*   By: keyn <keyn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 23:36:42 by keyn              #+#    #+#             */
-/*   Updated: 2025/02/12 18:22:27 by keyn             ###   ########.fr       */
+/*   Updated: 2025/02/12 23:25:06 by keyn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,21 @@ void	char_handler(int signal, siginfo_t *info, void *context)
 	(void)info;
 	enable_queue(true);
 	if (signal == SIGUSR2)
-		g_status->character |= (1 << (7 - g_status->bit_counter));
+		g_status->character |= (1U << (7 - g_status->bit_counter));
 	g_status->bit_counter++;
 	if (g_status->bit_counter == 8)
 	{
-		g_status->fill_index++;
-		g_status->message[g_status->fill_index] = g_status->character;
+		if (g_status->fill_index < g_status->message_len)
+			g_status->message[g_status->fill_index++] = g_status->character;
 		g_status->character = 0;
 		g_status->bit_counter = 0;
 		if (g_status->fill_index == g_status->message_len)
-			write(1, g_status->message, g_status->message_len);
+		{
+			ft_printf("%s", g_status->message);
+			free(g_status->message);
+			g_status->message = NULL;
+			init_values_storage(g_status, false);
+		}
 	}
 	enable_queue(false);
 }
@@ -111,7 +116,10 @@ int	main(void)
 	while (1)
 		pause();
 	if (g_status->message)
+	{
 		free(g_status->message);
-	free(g_status);
+		g_status->message = NULL;
+		free(g_status);
+	}
 	return (0);
 }
