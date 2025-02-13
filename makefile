@@ -10,37 +10,49 @@ CFLAGS := -Wall -Wextra -Werror
 
 RM := rm -rf
 
+MAKEFLAGS += --no-print-directory
+
 # ╰━━━━━━━━━━━━━━━━════════════════╛出 ❖ 力╘════════════════━━━━━━━━━━━━━━━━╯ #
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ FILE TREE ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
-# file lists
-LST_SRC =	client.c, server.c		\
+# directories
+LIB		:=	ft_printf/
+INC		:=	inc/
+SRC		:=	src/
 
-LIB	=	ft_printf/
+# file lists
+LST_SRC =	client.c server.c sigaction_setters.c signal_handlers.c
 
 # ╭━━━━━━━━━━━━══════════╕出 ❖ RULES ❖ 力╒═══════════━━━━━━━━━━━━╮ #
 
 all : $(NAME)
 
 $(NAME) : makeprintf
-	@$(CC) -Ift_printf/inc -I. -Lft_printf client.c -o client -lftprintf
-	@$(CC) -Ift_printf/inc -I. -Lft_printf server.c -o server -lftprintf
-	@echo "\e[0;32mLe client et le server ont été créés avec succès ! 🧬\e[0m"
+	@$(MAKE) server
+	@$(MAKE) client
 
 makeprintf:
-	$(MAKE) -C ft_printf all
+	@$(MAKE) -C $(LIB) all
+
+server:
+	$(CC) -I$(LIB)$(INC) -I$(INC) -L$(LIB) $(SRC)server.c $(SRC)sigaction_setters.c -o server -lftprintf
+	@echo "\e[0;32mLe server à été créé avec succès ! 🧬\e[0m"
+
+
+client:
+	$(CC) -I$(LIB)$(INC) -I$(INC) -L$(LIB) $(SRC)client.c  $(SRC)sigaction_setters.c -o client -lftprintf
+	@echo "\e[0;32mLe client à été créé avec succès ! 🧬\e[0m"
 
 clean:
-	@$(RM) client server
-	@$(MAKE) -C ft_printf clean
-	@echo "\e[0;36mClient et server supprimés 🧹\e[0m"
+	@$(MAKE) -C $(LIB) clean
 
 fclean:
-	@$(MAKE) -s SHOW_MSG_CLEAN=false clean
-	@$(MAKE) -C ft_printf fclean
+	@$(RM) client server
+	@$(MAKE) -C $(LIB) fclean
+	@echo "\e[0;34mClient et server supprimés 🧽\e[0m"
 
 re :
-	$(MAKE) fclean
-	$(MAKE) all
+	@$(MAKE) fclean
+	@$(MAKE) all
 	@echo "\e[0;32mExecutables recréés avec succès ! 🫡\e[0m"
