@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 
 	pid = ft_atoi(argv[1]);
 	len = (unsigned int)ft_strlen(argv[2]);
-	if (argc != 3 || kill(pid, 0) == -1)
+	if (argc != 3 || pid <= 0 || kill(pid, 0) == -1)
 	{
 		ft_printf("\033[31m⛔️ format : %s <pid> <message> ⛔️", argv[0]);
 		return (ft_printf("\033[0m\n"));
